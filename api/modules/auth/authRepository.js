@@ -1,6 +1,8 @@
 const db = require(`../../config/dynamoDB`);
 const crypto = require('crypto');
 const uniqid = require('uniqid');
+
+
 class AuthRepository {
 	constructor() {
 		this.tableName = 'Blog';

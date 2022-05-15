@@ -15,6 +15,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { login } from '../../redux/apiCalls';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 function Copyright(props) {
   return (
@@ -31,6 +33,7 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
+  const user = useSelector((state) => state.user.currentUser);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [emailError, setEmailError] = React.useState(false);
@@ -47,88 +50,94 @@ export default function SignIn() {
 
     if (password == '') {
       setPasswordError(true);
-    }else {
+    } else {
       setPasswordError(false);
     }
 
     login(dispatch, { UserEmail: email, PasswordHash: password });
   };
-
-  return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" noValidate maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <Box component="form" sx={{ mt: 1 }}>
-            <TextField
-              onChange={(e) => setEmail(e.target.value)}
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              sx={{ mb: 3 }}
-              autoFocus
-              error={emailError}
-              helperText={emailError === true ? 'Enter your email!' : ''}
-            />
-            <TextField
-              onChange={(e) => setPassword(e.target.value)}
-              error={passwordError}
-              helperText={passwordError === true ? 'Enter your password!' : ''}
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              autoFocus
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              onClick={handleClick}
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
+  if (user) {
+    return <Navigate to={'/'}></Navigate>
+  }
+  else {
+    return (
+      <ThemeProvider theme={theme}>
+        <Container component="main" noValidate maxWidth="xs">
+          <CssBaseline />
+          <Box
+            sx={{
+              marginTop: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <Box component="form" sx={{ mt: 1 }}>
+              <TextField
+                onChange={(e) => setEmail(e.target.value)}
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                sx={{ mb: 3 }}
+                autoFocus
+                error={emailError}
+                helperText={emailError === true ? 'Enter your email!' : ''}
+              />
+              <TextField
+                onChange={(e) => setPassword(e.target.value)}
+                error={passwordError}
+                helperText={passwordError === true ? 'Enter your password!' : ''}
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                autoFocus
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                onClick={handleClick}
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign In
+              </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href="#" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
+            </Box>
           </Box>
-        </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
-      </Container>
-    </ThemeProvider>
-  );
+          <Copyright sx={{ mt: 8, mb: 4 }} />
+        </Container>
+      </ThemeProvider>
+    );
+  }
+
+
 }
